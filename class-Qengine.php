@@ -4,7 +4,6 @@
  * Author: Riza
  * Email : me@riza.us
  * Date Created : 15th, Oct 2016
- * Last Updated : 17th, July 2017
  * License : GPL 
  */ 
  
@@ -23,7 +22,7 @@ class conn extends PDO{
 		if (!isset(self::$instance)){
 			self::$instance = new conn();
 		}
-    return self::$instance;
+    		return self::$instance;
 	}
 			
 /*
@@ -33,12 +32,12 @@ class conn extends PDO{
 
 	public function __construct()
 	{		
-		$this->Engine		 = 'mysql';
-		$this->DBhost		 = 'localhost';		
-		$this->DBuser		 = 'root';
-		$this->DBpass		 = '123';
-		$this->DBname		 = 'test';
-		$this->Engine		.= ':dbname='.$this->DBname .';host='.$this->DBhost;
+		$this->Engine = 'mysql';
+		$this->DBhost = 'localhost';		
+		$this->DBuser = 'root';
+		$this->DBpass = '123';
+		$this->DBname = 'test';
+		$this->Engine.= ':dbname='.$this->DBname .';host='.$this->DBhost;
 		parent::__construct( $this->Engine, $this->DBuser, $this->DBpass );
 	}
 
@@ -80,8 +79,8 @@ class conn extends PDO{
 			  $parameter[] = '(' . placeholders('?', sizeof($key)) . ')';
 			}
 		}
-		$command 	 .= ($count_array == 1)? "(".implode(',',$parameter).")" : implode(',', $parameter);
-		$exec_rows	= ($count_array == 1)? $rows : $multi_rows ;
+		$command  .= ($count_array == 1)? "(".implode(',',$parameter).")" : implode(',', $parameter);
+		$exec_rows = ($count_array == 1)? $rows : $multi_rows ;
 		$this->stmt = parent::prepare($command);	
 		$this->stmt->execute($exec_rows); 
 		$this->stmt->rowCount();
@@ -130,17 +129,17 @@ class conn extends PDO{
 	public function updb($tabel, $sets = null, $where = null)
 	{
 		
-		$update 	 = 'UPDATE '.$tabel.' SET ';
+		$update = 'UPDATE '.$tabel.' SET ';
 		$set=null; $value=null;			 
 		foreach($sets as $key => $values)
 		{
 			$set[] .= $key." = '".$values."'"; 
 			$value[] .= ':"'.$key.'" : "'.$values.'"';
 		}
-		$update 	.= implode(',',$set);
-		$json 		 = '{'.implode(',',$value).'}';			
-		$param 		 = json_decode($json,true);
-		$update 	.= ($where != null)? ' WHERE '.$where : null ;
+		$update .= implode(',',$set);
+		$json 	 = '{'.implode(',',$value).'}';			
+		$param 	 = json_decode($json,true);
+		$update .= ($where != null)? ' WHERE '.$where : null ;
 		$this->stmt = parent::prepare($update);
 		$this->stmt->execute($param);		  
 		$this->stmt->rowCount();
@@ -156,9 +155,9 @@ class conn extends PDO{
 	
 	public function getdb($table, $where=null, $order=null, $limit=null, $rows=null)
 	{	
-		$command 	= 'SELECT ';
-		$command .=	($rows  != null)? $rows.' FROM '.$table : '* FROM '.$table;
-		$command .=	($where != null)? ' WHERE '.$where : null ;
+		$command  = 'SELECT ';
+		$command .= ($rows  != null)? $rows.' FROM '.$table : '* FROM '.$table;
+		$command .= ($where != null)? ' WHERE '.$where : null ;
 		$command .= ($order != null)? ' ORDER BY '.$order.' ' : null ; 
 		$command .= ($limit != null)? ' LIMIT '.$limit : null ;			   
 		$this->stmt = parent::prepare($command);
@@ -186,12 +185,12 @@ class conn extends PDO{
 		$chktable 	= 'SHOW TABLE '.$table; 
 		$this->stmt = parent::exec($chktable);
 		if(!$this->stmt){
-			$command 		 = 'CREATE TABLE IF NOT EXISTS `'.$table.'` (';
+			$command = 'CREATE TABLE IF NOT EXISTS `'.$table.'` (';
 			foreach($item_rows as $x => $y){
-				$items[]	 = '`'.$x.'` '.$y;
+				$items[] = '`'.$x.'` '.$y;
 			}
-			$command 		.= implode(",", $items);
-			$command 		.= ') ENGINE='.$engine.' DEFAULT CHARSET='.$charset.';';
+			$command .= implode(",", $items);
+			$command .= ') ENGINE='.$engine.' DEFAULT CHARSET='.$charset.';';
 			$this->stmt  = parent::exec($command);
 		}
 		return $this->stmt;
@@ -200,18 +199,18 @@ class conn extends PDO{
  /*
  * Using create table  function "chkdb" (Default engine MyISAM & Charset utf8) ;
  * >>  	$myrow = array( 
- * >>  		"ID" 				=> 	"INT(11) AUTO_INCREMENT PRIMARY KEY", 
+ * >>  	  "ID"		=> 	"INT(11) AUTO_INCREMENT PRIMARY KEY", 
  * >>     "Prename" 	=> 	"VARCHAR(50) NOT NULL", 
- * >>     "Name"			=> 	"VARCHAR(250) NOT NULL",
- * >>     "Postcode"  =>	"VARCHAR(50) NOT NULL",
- * >>     "Country"   =>	"VARCHAR(50) NOT NULL" );
+ * >>     "Name"	=> 	"VARCHAR(250) NOT NULL",
+ * >>     "Postcode"  	=>	"VARCHAR(50) NOT NULL",
+ * >>     "Country"   	=>	"VARCHAR(50) NOT NULL" );
  * >>  	$db->chkdb("tb_foo", $myrow, "InnoDB", "latin1");
  */	
  
  public static function noDB()
  {		
-		self::$instance = null;		
-    return self::$instance;
+	self::$instance = null;		
+    	return self::$instance;
  }
  
  /*
