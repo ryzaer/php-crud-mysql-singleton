@@ -1,5 +1,5 @@
-# Q-engine-PHP-PDO-Class (singleton)
-
+# Q-engine PHP-PDO Class (singleton)
+<p>This is a simple CRUD Class with PHP PDO Statement and singleton</p>
 <h3>HOW to use?</h3>
 
 <strong>Open connection</strong>
