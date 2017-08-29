@@ -43,16 +43,6 @@ class conn extends PDO{
 
 	public function indb($table, $rows=null)
 	{
-		function placeholders($text, $count=0, $separator=",")
-		{
-			$result = array();
-			if($count > 0)
-				for($x=0; $x<$count; $x++){
-				$result[] = $text;
-				}
-			return implode($separator, $result);
-		}
-		
 		$command = 'INSERT INTO '.$table;
 		$row = null; $parameter=null;
 		foreach ($rows as $assoc)
@@ -71,6 +61,16 @@ class conn extends PDO{
 		
 		if ($count_array !== 1)
 		{			 
+			function placeholders($text, $count=0, $separator=",")
+			{
+				$result = array();
+				if($count > 0)
+					for($x=0; $x<$count; $x++){
+					$result[] = $text;
+					}
+				return implode($separator, $result);
+			}			
+			
 			$multi_rows = array();
 			foreach($rows as $key)
 			{				
