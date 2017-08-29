@@ -67,8 +67,7 @@ class conn extends PDO{
 			$parameter[] .=":".$key;
 		}
 		
-		$command .= " (".implode(', ', $row).")";
-		$command .= " VALUES ";
+		$command .= " (".implode(', ', $row).") VALUES ";
 		
 		if ($count_array !== 1)
 		{			 
