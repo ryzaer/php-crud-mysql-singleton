@@ -59,7 +59,7 @@ class conn extends PDO{
 		
 		$command .= " (".implode(', ', $row).") VALUES ";
 		
-		if ($count_array !== 1)
+		if ($count_array > 1)
 		{			 
 			function placeholders($text, $count=0, $separator=",")
 			{
