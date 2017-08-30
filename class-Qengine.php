@@ -69,7 +69,39 @@ class conn extends PDO{
 					$result[] = $text;
 					}
 				return implode($separator, $result);
-			}			
+public function indb($table, $rows=null)
+	{
+		
+		$command = 'INSERT INTO '.$table;
+		$row = null; $parameter=null;
+		foreach ($rows as $assoc)
+		{ 
+			$count_array = count($assoc);
+		}
+		
+		$varr = ($count_array == 1)? $rows : $assoc ;
+		foreach ($varr as $key => $value)
+		{
+			$row[]  .= $key;
+			$parameter[] .=":".$key;
+		}
+		
+		$command .= " (".implode(', ', $row).") VALUES ";
+		
+		if ($count_array > 1)
+		{			 
+			if (!function_exists('placeholders')) {
+				function placeholders($text, $count=0, $separator=",")
+				{
+					$result = array();
+					if($count > 0)
+						for($x=0; $x<$count; $x++){
+						$result[] = $text;
+						}	
+						
+					return implode($separator, $result);
+				}
+			}
 			
 			$multi_rows = array();
 			foreach($rows as $key)
@@ -78,8 +110,9 @@ class conn extends PDO{
 			  $parameter[] = '(' . placeholders('?', sizeof($key)) . ')';
 			}
 		}
-		$command  .= ($count_array == 1)? "(".implode(',',$parameter).")" : implode(',', $parameter);
-		$exec_rows = ($count_array == 1)? $rows : $multi_rows ;
+		$params		 = implode(',',$parameter);
+		$command 	.= ($count_array == 1)? "(".$params.")" : $params ;
+		$exec_rows	 = ($count_array == 1)? $rows : $multi_rows ;
 		$this->stmt = parent::prepare($command);	
 		$this->stmt->execute($exec_rows); 
 		$this->stmt->rowCount();
