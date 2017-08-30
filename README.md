@@ -23,7 +23,7 @@ $db->updb("table", $data_post, "id ='data_id'");</code></pre>
 if(!$show){
    echo 'Not Found!';
 }else{
-   foreach ($result as $data){  
+   foreach ($show as $data){  
      echo $data['row'];
    }
 }</code></pre>
