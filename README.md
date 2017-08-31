@@ -3,7 +3,10 @@
 <h3>HOW to use?</h3>
 
 <strong>Open connection</strong>
-<pre><code>$db = conn::myDB();</code></pre>
+<pre><code>
+include("class-Qengine.php");
+$db = conn::myDB();
+</code></pre>
 
 <strong>Insert function</strong>
 <pre><code>$data_post[] = array("test1" => $post1[$rand], "test2" => $post2[$rand], "test3" => json_encode(array($post3[$rand])));
