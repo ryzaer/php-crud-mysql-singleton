@@ -5,7 +5,7 @@
 <strong>Open connection</strong>
 <pre><code>
 include("class-Qengine.php");
-Default driver is mysql (pgsql not test yet)
+// Default driver is mysql (pgsql not test yet)
 $chk = array ("mysql","localhost","your_db_user","your_db_password","your_database_name");
 $db = conn::myDB($chk);
 
