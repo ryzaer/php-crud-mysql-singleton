@@ -19,7 +19,7 @@ $db->indb("table", $data_post);</code></pre>
 
 <strong>Update function</strong>
 <pre><code>$data_post = array("test1" => $post1 , "test2" => $post2, "test3" => $post3);
-$db->updb("table", $data_post, "id ='data_id'");</code></pre>
+$db->updb("table", $data_post, array("id => "data_id"));</code></pre>
 
 <strong>Select function</strong>
 <pre><code>$show = $db->getdb("tabel", "column1='id_or_data_to_show'", null, 3); // 3 is limit data to show;
