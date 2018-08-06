@@ -5,7 +5,19 @@
 <strong>Open connection</strong>
 <pre><code>
 include("class-Qengine.php");
-$db = conn::myDB();
+$chk = array (	
+            //<<<	TYPE DRIVER mysql(pgsql not test yet) <<<// 
+            "mysql",		
+            //<<<	DB HOST  <<<// 
+            "localhost",		
+            //<<< DB USER <<<// 
+            "your_user",		
+            //<<< DB PASSWORD <<<// 
+            "your_password",		
+            //<<< DB NAME <<<//
+            "your_database_name"
+         );
+$db = conn::myDB($chk);
 </code></pre>
 
 <strong>Insert function</strong>
