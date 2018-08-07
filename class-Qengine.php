@@ -92,18 +92,15 @@ final class pattern extends PDO{
 	{
 		$command = 'DELETE FROM '.$table;
 	   
-		$list = array(); $parameter = array();
+		$list = array(); $param = array();
 		foreach ($where as $key => $value)
 		{
 		  $list[] = "$key = :$key";
-		  $parameter[] .= '":'.$key.'":"'.$value.'"';
+		  $param[] .= '":'.$key.'":"'.$value.'"';
 		}
-		$command .= ' WHERE '.implode(' AND ',$list);
-   
-		$json = "{".implode(',',$parameter)."}";
-		$param = json_decode($json,true);
-
-		$this->stmt = parent::prepare($command);
+		$command	.= ' WHERE '.implode(' AND ',$list);
+   		$param 		 = json_decode('{'.implode(",",$param).'}',true);
+		$this->stmt	 = parent::prepare($command);
 		$this->stmt->execute($param);
 		$this->stmt->rowCount();		
 		return $this->stmt;
@@ -118,8 +115,9 @@ final class pattern extends PDO{
 	{
 		
 		$update	= 'UPDATE '.$table.' SET ';
-		$value	= [];				
-		
+		$value1	= [];
+		$value2 = [];
+		$updata = [];
 		foreach($sets as $key => $values)
 		{
 			$sdata[]  = $key."=:".$key; 
@@ -134,11 +132,11 @@ final class pattern extends PDO{
 			}
 		}		
 		
-		$value1      = json_decode('{'.implode(",",$value1).'}', true);
-		$value2      = json_decode('{'.implode(",",$value2).'}', true);
-		$update     .= implode(',',$sdata);			
-		$param 	     = array_merge($value1,$value2);
-		$update     .= (!empty($where))? ' WHERE '.implode(',',$updata) : null ;
+		$value1 	 = json_decode('{'.implode(",",$value1).'}', true);
+		$value2 	 = json_decode('{'.implode(",",$value2).'}', true);
+		$update 	.= implode(',',$sdata);			
+		$param 		 = array_merge($value1,$value2);
+		$update 	.= (!empty($where))? ' WHERE '.implode(' AND ',$updata) : null ;
 		$this->stmt  = parent::prepare($update);
 		$this->stmt->execute($param);		  
 		$this->stmt->rowCount();
