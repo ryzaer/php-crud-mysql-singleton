@@ -1,4 +1,4 @@
-# Q-engine PHP-PDO Class (singleton)
+# PHP CRUD Class For Mysql (singleton)
 <p>This is a simple CRUD Class with PHP PDO Statement and singleton</p>
 <h3>HOW to use?</h3>
 
