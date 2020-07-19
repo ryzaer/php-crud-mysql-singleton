@@ -9,7 +9,7 @@
  * License 	: GPL
  * 
  * 
- * Costumize your recomanded extension file above (LONGBLOB)
+ * Costumize your recomanded extension (LONGBLOB) file below
  * upload file to db depend your SQl allow packet setting OR PHP memory limit size 
  */ 
 
