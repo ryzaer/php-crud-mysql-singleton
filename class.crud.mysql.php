@@ -6,7 +6,7 @@
  * Desc		: PHP PDO Mysql CRUD Object with Costum LONGBLOB
  * Date Created : 15th, Oct 2016
  * Last Updated : 19th, Jul 2020
- * License 	: GPL
+ * License 	: MIT
  * 
  * 
  * Costumize your recomanded extension (LONGBLOB) file below
