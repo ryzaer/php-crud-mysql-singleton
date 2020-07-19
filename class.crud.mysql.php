@@ -111,18 +111,18 @@ final class pattern extends PDO{
 			(!$arr_mode)? ( $obj_rows[]  = trim($value))	: null ;
 		}
 		
-		$command   .= " (".implode(',', $sub_rows).") VALUES ";
-		$params		= implode(',',$parameter);
-		$command   .= ($arr_mode)? $params : "(".$params.")" ;
-		$except 	= implode('|', explode('|', trim($this->format)));
+		$command .= " (".implode(',', $sub_rows).") VALUES ";
+		$params	  = implode(',',$parameter);
+		$command .= ($arr_mode)? $params : "(".$params.")" ;
+		$except   = implode('|', explode('|', trim($this->format)));
 		
 		$this->stmt = parent::prepare($command);		
 		
 		for($i=0;$i < count($obj_rows);$i++){
-			$sum[$i] 	 = ($arr_mode)? $i+1 : ":".$sub_rows[$i] ;
-			$pdo_sum[$i] = is_numeric($obj_rows[$i])? PDO::PARAM_INT : PDO::PARAM_STR ;
-			$var[$i] 	 = ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  file_get_contents($obj_rows[$i]) : $obj_rows[$i] ) : $obj_rows[$i] ;	
-			$pdo_var[$i] = ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  PDO::PARAM_LOB : $pdo_sum[$i] ) : $pdo_sum[$i] ;	
+			$sum[$i] 	= ($arr_mode)? $i+1 : ":".$sub_rows[$i] ;
+			$pdo_sum[$i] 	= is_numeric($obj_rows[$i])? PDO::PARAM_INT : PDO::PARAM_STR ;
+			$var[$i] 	= ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  file_get_contents($obj_rows[$i]) : $obj_rows[$i] ) : $obj_rows[$i] ;	
+			$pdo_var[$i] 	= ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  PDO::PARAM_LOB : $pdo_sum[$i] ) : $pdo_sum[$i] ;	
 			$this->stmt->bindParam($sum[$i],$var[$i],$pdo_var[$i]);			
 		}
 		
@@ -142,8 +142,8 @@ final class pattern extends PDO{
 		$list = array(); $param = array();
 		foreach ($where as $key => $value)
 		{
-		  $list[] 	= "$key = :$key";
-		  $param[] .= '":'.$key.'":"'.$value.'"';
+		  $list[]	 = "$key = :$key";
+		  $param[] 	.= '":'.$key.'":"'.$value.'"';
 		}
 		$command	.= ' WHERE '.implode(' AND ', $list);
    		$param 		 = json_decode('{'.implode(",",$param).'}',true);
@@ -250,24 +250,24 @@ final class pattern extends PDO{
 	/*
  	 * Using create table  function "chkdb" (Default engine MyISAM & Charset utf8) ;
  	 * >>  	$myrow = array( 
- 	 * >>  	  "ID" 		  => 	"INT(11) AUTO_INCREMENT PRIMARY KEY", 
- 	 * >>     "Prename"   => 	"VARCHAR(50) NOT NULL", 
- 	 * >>     "Name"	  => 	"VARCHAR(250) NOT NULL",
- 	 * >>     "Postcode"  =>	"VARCHAR(50) NOT NULL",
- 	 * >>     "Country"   =>	"VARCHAR(50) NOT NULL" );
+ 	 * >>  	  "ID" 		=> "INT(11) AUTO_INCREMENT PRIMARY KEY", 
+ 	 * >>     "Prename"  	=> "VARCHAR(50) NOT NULL", 
+ 	 * >>     "Name"	=> "VARCHAR(250) NOT NULL",
+ 	 * >>     "Postcode" 	=> "VARCHAR(50) NOT NULL",
+ 	 * >>     "Country" 	=> "VARCHAR(50) NOT NULL" );
  	 * >>  	$db->chkdb("tb_foo", $myrow, "InnoDB", "latin1");
  	 */		
 
 	public function chkdb($table, $item_rows=array(), $engine="MyISAM", $charset="utf8"){
-		$chktable 	= 'SHOW TABLE '.$table; 
+		$chktable = 'SHOW TABLE '.$table; 
 		$this->stmt = parent::exec($chktable);
 		if(!$this->stmt){
-			$command 		 = 'CREATE TABLE IF NOT EXISTS `'.$table.'` (';
+			$command  = 'CREATE TABLE IF NOT EXISTS `'.$table.'` (';
 			foreach($item_rows as $x => $y){
 				$items[]	 = '`'.$x.'` '.$y;
 			}
-			$command 		.= implode(",", $items);
-			$command 		.= ') ENGINE='.$engine.' DEFAULT CHARSET='.$charset.';';
+			$command .= implode(",", $items);
+			$command .= ') ENGINE='.$engine.' DEFAULT CHARSET='.$charset.';';
 			$this->stmt  	 = parent::exec($command);
 		}
 		return $this->stmt;
@@ -323,14 +323,14 @@ trait conn {
 			'port' 	=> (isset($pattern[5])? $pattern[5] : '3306'), 
 			'type' 	=> (isset($pattern[4])? $pattern[4] : 'mysql'),
 			'error' => [
-							"unknown"		=> "<i style='color:red'>Unknown Error!</i>",
-							"0"				=> "<i style='color:red'>Unknown Driver! (Check Your login pattern again)</i>",
-							"1045" 			=> "<i style='color:red'>Access Denied! (Check Your login pattern again)</i>",
-							"2002" 			=> "<i style='color:red'>Not Connect!</i>",
-							"23000"	 		=> "<i style='color:red'>Duplicate keys</i>",
-							"23001" 		=> "<i style='color:red'>Some other error</i>",
-							"42000" 		=> "<i style='color:red'>Syntax error or access violation</i>",
-							"08007" 		=> "<i style='color:red'>Connection failure during transaction</i>"
+							"unknown"	=> "<i style='color:red'>Unknown Error!</i>",
+							"0"		=> "<i style='color:red'>Unknown Driver! (Check Your login pattern again)</i>",
+							"1045" 		=> "<i style='color:red'>Access Denied! (Check Your login pattern again)</i>",
+							"2002" 		=> "<i style='color:red'>Not Connect!</i>",
+							"23000"	 	=> "<i style='color:red'>Duplicate keys</i>",
+							"23001" 	=> "<i style='color:red'>Some other error</i>",
+							"42000" 	=> "<i style='color:red'>Syntax error or access violation</i>",
+							"08007" 	=> "<i style='color:red'>Connection failure during transaction</i>"
 						]
 		];
 
