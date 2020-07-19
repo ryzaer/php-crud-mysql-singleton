@@ -48,7 +48,8 @@ final class pattern extends PDO{
 	 * 	//<<< TYPE DRIVER mysql(pgsql not test)<<<// 
 	 * 	"mysql" 
 	 * 		
-	 * 	];	
+	 * ];
+	 *
 	 * $dbs = conn::myDB($chk);    
 	 * 
 	 * or simple connect to all your db
