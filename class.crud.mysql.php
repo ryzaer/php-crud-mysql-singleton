@@ -1,12 +1,12 @@
 <?php
 /*
  * PDO CLASS CRUD for Mysql [singleton]
- * Source		: https://github.com/ryzaer/php-crud-mysql-singleton
- * Author		: Riza
- * Desc			: PHP PDO Mysql CRUD Object with Costum LONGBLOB
+ * Source	: https://github.com/ryzaer/php-crud-mysql-singleton
+ * Author	: Riza TTNT
+ * Desc		: PHP PDO Mysql CRUD Object with Costum LONGBLOB
  * Date Created : 15th, Oct 2016
  * Last Updated : 19th, Jul 2020
- * License 		: GPL
+ * License 	: GPL
  * 
  * 
  * Costumize your recomanded extension file above (LONGBLOB)
