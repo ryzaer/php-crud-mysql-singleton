@@ -6,8 +6,11 @@
 <pre><code>
 require_once("class.crud.mysql.php");
 // Default driver is mysql (pgsql not test yet)
-$chk = array ("mysql","localhost","your_db_user","your_db_password","your_database_name");
+$chk = array ("your_db_user","your_db_password","your_database_name","localhost","port","mysql");
 $db = conn::myDB($chk);
+
+// or simple very start to connect all of your db
+$db = conn::myDB(["your_db_user","your_db_password"]);
 
 </code></pre>
 
