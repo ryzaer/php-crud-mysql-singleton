@@ -323,15 +323,15 @@ trait conn {
 			'port' 	=> (isset($pattern[5])? $pattern[5] : '3306'), 
 			'type' 	=> (isset($pattern[4])? $pattern[4] : 'mysql'),
 			'error' => [
-							"unknown"	=> "<i style='color:red'>Unknown Error!</i>",
-							"0"		=> "<i style='color:red'>Unknown Driver! (Check Your login pattern again)</i>",
-							"1045" 		=> "<i style='color:red'>Access Denied! (Check Your login pattern again)</i>",
-							"2002" 		=> "<i style='color:red'>Not Connect!</i>",
-							"23000"	 	=> "<i style='color:red'>Duplicate keys</i>",
-							"23001" 	=> "<i style='color:red'>Some other error</i>",
-							"42000" 	=> "<i style='color:red'>Syntax error or access violation</i>",
-							"08007" 	=> "<i style='color:red'>Connection failure during transaction</i>"
-						]
+				"unknown"	=> "<i style='color:red'>Unknown Error!</i>",
+				"0"		=> "<i style='color:red'>Unknown Driver! (Check Your login pattern again)</i>",
+				"1045" 		=> "<i style='color:red'>Access Denied! (Check Your login pattern again)</i>",
+				"2002" 		=> "<i style='color:red'>Not Connect!</i>",
+				"23000"	 	=> "<i style='color:red'>Duplicate keys</i>",
+				"23001" 	=> "<i style='color:red'>Some other error</i>",
+				"42000" 	=> "<i style='color:red'>Syntax error or access violation</i>",
+				"08007" 	=> "<i style='color:red'>Connection failure during transaction</i>"
+			]
 		];
 
 		if (!isset(self::$inst)){
