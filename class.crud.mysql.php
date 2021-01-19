@@ -5,7 +5,7 @@
  * Author	: Riza TTNT
  * Desc		: PHP PDO Mysql CRUD Object with Costum LONGBLOB
  * Date Created : 15th, Oct 2016
- * Last Updated : 19th, Jul 2020
+ * Last Updated : 03rd, Jan 2021
  * License 	: MIT
  * 
  * 
@@ -61,7 +61,7 @@ final class pattern extends PDO{
 	{			
 		try{	
 			parent::__construct( 
-				$Engine['type'].':dbname='.(isset($Engine['dbn'])? $Engine['dbn']:null).';port='.$Engine['port'].';host='. $Engine['dbh'], $Engine['dbu'], $Engine['dbp'] 
+				$Engine['type'].':host='. $Engine['dbh'].( $Engine['dbn'] ? ';dbname='.$Engine['dbn'] : null ).';port='.$Engine['port'], $Engine['dbu'], $Engine['dbp'] 
 			);
 		}
 		catch(PDOException $e){	
@@ -321,8 +321,8 @@ trait conn {
 			'dbp' 	=> $pass,
 			'dbn' 	=> (isset($pattern[2])? $pattern[2] : null),
 			'dbh' 	=> (isset($pattern[3])? $pattern[3] : 'localhost'),
-			'port' 	=> (isset($pattern[5])? $pattern[5] : '3306'), 
-			'type' 	=> (isset($pattern[4])? $pattern[4] : 'mysql'),
+			'port' 	=> (isset($pattern[4])? $pattern[4] : '3306'), 
+			'type' 	=> (isset($pattern[5])? $pattern[5] : 'mysql'),
 			'error' => [
 				"unknown"	=> "<i style='color:red'>Unknown Error!</i>",
 				"0"		=> "<i style='color:red'>Unknown Driver! (Check Your login pattern again)</i>",
