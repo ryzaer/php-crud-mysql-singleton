@@ -1,5 +1,5 @@
 # PHP CRUD Class For Mysql (singleton)
-<p>This is a simple CRUD Class with PHP PDO Statement and singleton</p>
+<p>This is a simple CRUD Class with PHP PDO Statement</p>
 <h3>HOW to use?</h3>
 
 <strong>Open connection</strong>
