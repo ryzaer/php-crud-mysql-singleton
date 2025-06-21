@@ -1,6 +1,6 @@
-# 📘 DatabaseEngine - PDO CRUD Extension for PHP 7.4+
+# 📘 Engine - PDO CRUD Extension for PHP 7.4+
 
-`DatabaseEngine` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
+`Engine` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
 
 ---
 
@@ -18,8 +18,8 @@
 
 ```
 /Database
-├── DatabaseEngine.php   ← Class utama (extends PDO)
-├── BlobHelper.php       ← Helper baca & validasi file BLOB
+├── Engine.php       ← Class utama (extends PDO)
+├── BlobHelper.php   ← Helper baca & validasi file BLOB
 ```
 
 ---
@@ -27,7 +27,7 @@
 ## ⚙️ Konfigurasi Koneksi
 
 ```php
-use Database\DatabaseEngine;
+use Database\Engine;
 
 $config = [
     'user' => 'root',
@@ -38,7 +38,7 @@ $config = [
     'type' => 'mysql'          // opsional, default 'mysql'
 ];
 
-$pdo = DatabaseEngine::connect($config);
+$pdo = Engine::connect($config);
 ```
 
 ---
