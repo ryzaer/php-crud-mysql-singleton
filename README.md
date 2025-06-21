@@ -1,6 +1,6 @@
-# 📘 Engine - PDO CRUD Extension for PHP 7.4+
+# 📘 PHP PDO CRUD Singletone Extension (v7.4+)
 
-`Engine` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
+`PHP PDO CRUD Singletone` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
 
 ---
 
