@@ -1,50 +1,145 @@
-# PHP CRUD Class For Mysql (singleton)
-<p>This is a simple CRUD Class with PHP PDO Statement</p>
-<h3>HOW to use?</h3>
+# 📘 DatabaseEngine - PDO CRUD Extension for PHP 7.4+
 
-<strong>Open connection</strong>
-<pre><code>
-require_once("class.crud.mysql.php");
-// Default driver is mysql (pgsql not test yet)
-$chk = array ("your_db_user","your_db_password","your_database_name","your_host","your_port_host","driver");
-$db = conn::myDB($chk);
+`DatabaseEngine` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
 
-// or simple very start to connect all of your db
-$db = conn::myDB(["your_db_user","your_db_password"]);
+---
 
-</code></pre>
+## 🚀 Fitur Utama
 
-<strong>Insert function</strong>
-<pre><code>$data_post[] = array("test1" => $post1[$rand], "test2" => $post2[$rand], "test3" => json_encode(array($post3[$rand])));
-// or
-$data_post = array("test1" => $post1 , "test2" => $post2, "test3" => $post3);
-$db->indb("table", $data_post);</code></pre>
+- Extends `PDO`, sehingga semua method asli tetap bisa digunakan (`prepare`, `query`, dll).
+- Method CRUD langsung tersedia: `insert`, `update`, `delete`, `select`, `count`.
+- Dukungan penyimpanan file ke database (LONGBLOB) otomatis.
+- Format file yang didukung bisa dikustomisasi.
+- Kompatibel dengan PHP 7.4+.
 
-<strong>Delete function</strong>
-<pre><code>$db->dldb("table", array("id" => "data_id"));</code></pre>
+---
 
-<strong>Update function</strong>
-<pre><code>$data_post = array("test1" => $post1 , "test2" => $post2, "test3" => $post3);
-$db->updb("table", $data_post, array("id => "data_id"));</code></pre>
+## 🧱 Struktur
 
-<strong>Select function</strong>
-<pre><code>$show = $db->getdb("tabel", "column1='id_or_data_to_show'", null, 3); // 3 is limit data to show;
-if(!$show){
-   echo 'Not Found!';
-}else{
-   foreach ($show as $data){  
-     echo $data['row'];
-   }
-}</code></pre>
+```
+/Database
+├── DatabaseEngine.php   ← Class utama (extends PDO)
+├── BlobHelper.php       ← Helper baca & validasi file BLOB
+```
 
-<strong>Create Table function</strong>
-<pre><code>$myrow = array( 
-"ID"        =>  "INT(11) AUTO_INCREMENT PRIMARY KEY", 
-"Prename"   => 	"VARCHAR(50) NOT NULL", 
-"Name"      => 	"VARCHAR(250) NOT NULL",
-"Postcode"  =>	"VARCHAR(50) NOT NULL",
-"Country"   =>	"VARCHAR(50) NOT NULL" );
-$db->chkdb("tb_foo", $myrow, "InnoDB", "latin1");</code></pre>
+---
 
-<strong>Close connection</strong>
-<pre><code>$db = conn::noDB();</code></pre>
+## ⚙️ Konfigurasi Koneksi
+
+```php
+use Database\DatabaseEngine;
+
+$config = [
+    'user' => 'root',
+    'pass' => '123',
+    'dbname' => 'DBriza',
+    'host' => 'localhost',     // opsional, default 'localhost'
+    'port' => '3306',          // opsional, default '3306'
+    'type' => 'mysql'          // opsional, default 'mysql'
+];
+
+$pdo = DatabaseEngine::connect($config);
+```
+
+---
+
+## ✨ Method CRUD
+
+### ➕ `insert(string $table, array $data, bool $blob = false): int`
+
+Insert data ke tabel.
+
+**Contoh:**
+
+```php
+$id = $pdo->insert('users', [
+    'name' => 'Riza',
+    'avatar' => '/path/to/image.jpg' // akan dibaca otomatis jika $blob = true
+], true);
+```
+
+---
+
+### 🔁 `update(string $table, array $data, array $where, bool $blob = false): bool`
+
+Update data berdasarkan kondisi `where`.
+
+**Contoh:**
+
+```php
+$pdo->update('users', [
+    'name' => 'Updated Name'
+], [
+    'id' => 1
+]);
+```
+
+---
+
+### ❌ `delete(string $table, array $where): bool`
+
+Hapus data berdasarkan kondisi.
+
+**Contoh:**
+
+```php
+$pdo->delete('users', ['id' => 5]);
+```
+
+---
+
+### 📄 `select(string $table, ?string $where = null, ?string $order = null, ?int $limit = null, ?string $columns = '*'): array`
+
+Ambil data dari tabel dengan filter opsional.
+
+**Contoh:**
+
+```php
+$data = $pdo->select('users', 'age > 25', 'id DESC', 10);
+```
+
+---
+
+### 🔢 `count(string $table, ?string $where = null): int`
+
+Hitung jumlah record.
+
+**Contoh:**
+
+```php
+$total = $pdo->count('users', 'role = "admin"');
+```
+
+---
+
+## 📦 Format File BLOB
+
+Default: `tmp|mp4|webm|mp3|ogg|aac|zip|png|gif|jpeg|jpg|bmp|svg|pdf`
+
+**Ubah dengan:**
+
+```php
+$pdo->format = 'jpg|png|pdf';
+```
+
+---
+
+## 🧪 Testing File BLOB
+
+```php
+$isValid = BlobHelper::isBlobFile('image.jpg', $pdo->format); // true
+$content = BlobHelper::readFile('image.jpg'); // isi binary
+```
+
+---
+
+## 🧼 Catatan
+
+- Jika file path tidak valid, field akan diisi kosong.
+- Tidak ada validasi size file — pastikan Anda tidak melebihi batas max\_packet\_size MySQL dan memory\_limit PHP.
+
+---
+
+## 📚 Lisensi
+
+MIT License – bebas digunakan dan dimodifikasi.
