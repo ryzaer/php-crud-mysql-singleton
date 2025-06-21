@@ -124,9 +124,8 @@ final class pattern extends PDO{
 			$pdo_sum[$i] 	= is_numeric($obj_rows[$i])? PDO::PARAM_INT : PDO::PARAM_STR ;
 			$var[$i] 	= ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  file_get_contents($obj_rows[$i]) : $obj_rows[$i] ) : $obj_rows[$i] ;	
 			$pdo_var[$i] 	= ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($obj_rows[$i]))>0)?  PDO::PARAM_LOB : $pdo_sum[$i] ) : $pdo_sum[$i] ;	
-			$this->stmt->bindParam($sum[$i],$var[$i],$pdo_var[$i]);			
+			$this->stmt->bindValue($sum[$i],$var[$i],$pdo_var[$i]);			
 		}
-		
 		$this->stmt->execute();		
 		return $this->lastInsertId();
 	}
@@ -143,13 +142,11 @@ final class pattern extends PDO{
 		$list = array(); $param = array();
 		foreach ($where as $key => $value)
 		{
-		  $list[]	 = "$key = :$key";
-		  $param[] 	.= '":'.$key.'":"'.$value.'"';
+		  $list[]	= "$key = :$key";
+		  $param[":$key"] = $value;
 		}
 		$command	.= ' WHERE '.implode(' AND ', $list);
-   		$param 		 = json_decode('{'.implode(",",$param).'}',true);
 		$this->stmt	 = parent::prepare($command);
-
 		return $this->stmt->execute($param);
 	}
 
@@ -211,7 +208,7 @@ final class pattern extends PDO{
 			$pdo_sum[$i] = is_numeric($vdata[$i])? PDO::PARAM_INT : PDO::PARAM_STR ;
 			$var[$i] 	 = ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($vdata[$i]))>0)?  file_get_contents($vdata[$i]) : $vdata[$i] ) : $vdata[$i] ;	
 			$pdo_var[$i] = ($BLOB)? ((preg_match('/^.*\.('.$except.')$/i',strtolower($vdata[$i]))>0)?  PDO::PARAM_LOB : $pdo_sum[$i] ) : $pdo_sum[$i] ;		
-			$this->stmt->bindParam($rdata[$i], $var[$i],$pdo_var[$i]);	
+			$this->stmt->bindValue($rdata[$i], $var[$i],$pdo_var[$i]);	
 		}			
 			
 		return $this->stmt->execute();
@@ -260,7 +257,7 @@ final class pattern extends PDO{
  	 */		
 
 	public function chkdb($table, $item_rows=array(), $engine="MyISAM", $charset="utf8"){
-		$chktable = 'SHOW TABLE '.$table; 
+		$chktable = "SHOW TABLES LIKE '$table'"; 
 		$this->stmt = parent::exec($chktable);
 		if(!$this->stmt){
 			$command  = 'CREATE TABLE IF NOT EXISTS `'.$table.'` (';
