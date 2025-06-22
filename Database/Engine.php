@@ -20,7 +20,6 @@ class Engine extends PDO
         try {
             $pdo = new self($dsn, $config['user'] ?? '', $config['pass'] ?? '');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // parent::__construct($dsn, $config['user'] ?? '', $config['pass'] ?? '');
             return $pdo;
         } catch (PDOException $e) {
             die("Connection Error: " . $e->getMessage());
