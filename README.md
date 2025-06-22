@@ -45,7 +45,7 @@ $pdo = Engine::connect($config);
 
 ## ✨ Method CRUD
 
-### ➕ `insert(string $table, array $data, bool $blob = false): int`
+### ➕ `insert(string $table, array $data): int`
 
 Insert data ke tabel.
 
@@ -54,21 +54,38 @@ Insert data ke tabel.
 ```php
 $id = $pdo->insert('users', [
     'name' => 'Riza',
-    'avatar' => '/path/to/image.jpg' // akan dibaca otomatis jika $blob = true
+    'avatar' => '/path/to/image.jpg' // akan terbaca sebagai string
+], true);
+
+atau 
+
+$id = $pdo->blob()->insert('users', [
+    'name' => 'Riza',
+    'avatar' => '/path/to/image.jpg' // akan terbaca sebagai file
 ], true);
 ```
 
 ---
 
-### 🔁 `update(string $table, array $data, array $where, bool $blob = false): bool`
+### 🔁 `update(string $table, array $data, array $where): bool`
 
 Update data berdasarkan kondisi `where`.
 
 **Contoh:**
 
 ```php
+$pdo->blob()->update('users', [
+    'name' => 'Updated Name',
+    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai file
+], [
+    'id' => 1
+]);
+
+atau 
+
 $pdo->update('users', [
-    'name' => 'Updated Name'
+    'name' => 'Updated Name',
+    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai string
 ], [
     'id' => 1
 ]);

@@ -7,6 +7,7 @@ use PDOException;
 class Engine extends PDO
 {
     public string $format = 'tmp|mp4|jpg|png|pdf';
+    private bool $allowBlob = false;
 
     public static function connect(array $config): self {
         $dsn = sprintf(
@@ -26,24 +27,31 @@ class Engine extends PDO
         }
     }
 
-    public function insert(string $table, array $data, bool $blob = false): int {
+    public function blob(){
+        $this->allowBlob = true;
+        return $this;
+    }
+
+    public function insert(string $table, array $data): int {
         $keys = array_keys($data);
         $placeholders = array_map(fn($k) => ":$k", $keys);
         $sql = "INSERT INTO `$table` (" . implode(',', $keys) . ") VALUES (" . implode(',', $placeholders) . ")";
         $stmt = $this->prepare($sql);
 
         foreach ($data as $key => $value) {
-            $isBlob = $blob && BlobHelper::isBlobFile($value, $this->format);
+            $isBlob = $this->allowBlob && BlobHelper::isBlobFile($value, $this->format);
             $val = $isBlob ? BlobHelper::readFile($value) : $value;
             $type = $isBlob ? PDO::PARAM_LOB : (is_numeric($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
             $stmt->bindValue(":$key", $val, $type);
         }
 
+        $this->allowBlob = false;
+
         $stmt->execute();
         return (int) $this->lastInsertId();
     }
 
-    public function update(string $table, array $data, array $where, bool $blob = false): bool {
+    public function update(string $table, array $data, array $where): bool {
         $setParts = [];
         foreach ($data as $key => $_) {
             $setParts[] = "$key = :$key";
@@ -57,7 +65,7 @@ class Engine extends PDO
         $stmt = $this->pdo->prepare($sql);
 
        foreach ($data as $key => $value) {
-            $isBlob = $blob && BlobHelper::isBlobFile($value, $this->format);
+            $isBlob = $this->allowBlob && BlobHelper::isBlobFile($value, $this->format);
             $val = $isBlob ? BlobHelper::readFile($value) : $value;
             $type = $isBlob ? PDO::PARAM_LOB : (is_numeric($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
             $stmt->bindValue(":$key", $val, $type);
@@ -67,6 +75,8 @@ class Engine extends PDO
             $param = is_numeric($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
             $stmt->bindValue(":w_$key", $value, $param);
         }
+
+        $this->allowBlob = false;
 
         return $stmt->execute();
     }
