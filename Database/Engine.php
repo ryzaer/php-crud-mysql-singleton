@@ -17,10 +17,10 @@ class Engine extends PDO
             $config['port'] ?? '3306',
             isset($config['dbname']) ? ';dbname=' . $config['dbname'] : ''
         );
-
         try {
             $pdo = new self($dsn, $config['user'] ?? '', $config['pass'] ?? '');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // parent::__construct($dsn, $config['user'] ?? '', $config['pass'] ?? '');
             return $pdo;
         } catch (PDOException $e) {
             die("Connection Error: " . $e->getMessage());
@@ -44,9 +44,7 @@ class Engine extends PDO
             $type = $isBlob ? PDO::PARAM_LOB : (is_numeric($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
             $stmt->bindValue(":$key", $val, $type);
         }
-
         $this->allowBlob = false;
-
         $stmt->execute();
         return (int) $this->lastInsertId();
     }
@@ -62,7 +60,7 @@ class Engine extends PDO
         }
 
         $sql = "UPDATE `$table` SET " . implode(',', $setParts) . " WHERE " . implode(' AND ', $whereParts);
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->prepare($sql);
 
        foreach ($data as $key => $value) {
             $isBlob = $this->allowBlob && BlobHelper::isBlobFile($value, $this->format);
@@ -87,7 +85,7 @@ class Engine extends PDO
             $parts[] = "$key = :$key";
         }
         $sql = "DELETE FROM `$table` WHERE " . implode(' AND ', $parts);
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->prepare($sql);
 
         foreach ($where as $key => $value) {
             $stmt->bindValue(":$key", $value);
@@ -102,13 +100,13 @@ class Engine extends PDO
         if ($order) $sql .= " ORDER BY $order";
         if ($limit !== null) $sql .= " LIMIT $limit";
 
-        $stmt = $this->pdo->query($sql);
+        $stmt = $this->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function count(string $table, ?string $where = null): int {
         $sql = "SELECT COUNT(*) FROM `$table`";
         if ($where) $sql .= " WHERE $where";
-        return (int) $this->pdo->query($sql)->fetchColumn();
+        return (int) $this->query($sql)->fetchColumn();
     }
 }

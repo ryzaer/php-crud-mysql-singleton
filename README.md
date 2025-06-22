@@ -55,14 +55,14 @@ Insert data ke tabel.
 $id = $pdo->insert('users', [
     'name' => 'Riza',
     'avatar' => '/path/to/image.jpg' // akan terbaca sebagai string
-], true);
+]);
 
 atau 
 
 $id = $pdo->blob()->insert('users', [
     'name' => 'Riza',
     'avatar' => '/path/to/image.jpg' // akan terbaca sebagai file
-], true);
+]);
 ```
 
 ---
@@ -74,6 +74,15 @@ Update data berdasarkan kondisi `where`.
 **Contoh:**
 
 ```php
+$pdo->update('users', [
+    'name' => 'Updated Name',
+    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai string
+], [
+    'id' => 1
+]);
+
+atau 
+
 $pdo->blob()->update('users', [
     'name' => 'Updated Name',
     'avatar' => '/path/to/image.jpg' // akan terupdate sebagai file
@@ -81,14 +90,6 @@ $pdo->blob()->update('users', [
     'id' => 1
 ]);
 
-atau 
-
-$pdo->update('users', [
-    'name' => 'Updated Name',
-    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai string
-], [
-    'id' => 1
-]);
 ```
 
 ---
