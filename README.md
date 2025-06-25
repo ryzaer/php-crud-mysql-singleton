@@ -1,6 +1,6 @@
-# 📘 PHP PDO CRUD Singletone Extension (v7.4+)
+# 📘 DatabaseEngine - PDO CRUD Extension for PHP 7.4+
 
-`PHP PDO CRUD Singletone` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, dan `count`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
+`DatabaseEngine` adalah class PHP yang mewarisi `PDO` dan menambahkan fungsi CRUD siap pakai seperti `insert`, `update`, `delete`, `select`, `count`, dan `createTable`, serta mendukung penyimpanan file BLOB secara langsung dari path file.
 
 ---
 
@@ -10,6 +10,8 @@
 - Method CRUD langsung tersedia: `insert`, `update`, `delete`, `select`, `count`.
 - Dukungan penyimpanan file ke database (LONGBLOB) otomatis.
 - Format file yang didukung bisa dikustomisasi.
+- `select` mendukung `LIKE` dan `OR` yang aman dengan bind parameter.
+- `createTable` untuk membuat tabel dengan parameter array.
 - Kompatibel dengan PHP 7.4+.
 
 ---
@@ -18,8 +20,7 @@
 
 ```
 /Database
-├── Engine.php       ← Class utama (extends PDO)
-├── BlobHelper.php   ← Helper baca & validasi file BLOB
+├── DatabaseEngine.php   ← Class utama (extends PDO)
 ```
 
 ---
@@ -27,7 +28,7 @@
 ## ⚙️ Konfigurasi Koneksi
 
 ```php
-use Database\Engine;
+use Database\DatabaseEngine;
 
 $config = [
     'user' => 'root',
@@ -38,14 +39,14 @@ $config = [
     'type' => 'mysql'          // opsional, default 'mysql'
 ];
 
-$pdo = Engine::connect($config);
+$pdo = DatabaseEngine::connect($config);
 ```
 
 ---
 
 ## ✨ Method CRUD
 
-### ➕ `insert(string $table, array $data): int`
+### ➕ `insert(string $table, array $data, bool $blob = false): int`
 
 Insert data ke tabel.
 
@@ -54,20 +55,13 @@ Insert data ke tabel.
 ```php
 $id = $pdo->insert('users', [
     'name' => 'Riza',
-    'avatar' => '/path/to/image.jpg' // akan terbaca sebagai string
-]);
-
-atau 
-
-$id = $pdo->blob()->insert('users', [
-    'name' => 'Riza',
-    'avatar' => '/path/to/image.jpg' // akan terbaca sebagai file
-]);
+    'avatar' => '/path/to/image.jpg' // akan dibaca otomatis jika $blob = true
+], true);
 ```
 
 ---
 
-### 🔁 `update(string $table, array $data, array $where): bool`
+### 🔁 `update(string $table, array $data, array $where, bool $blob = false): bool`
 
 Update data berdasarkan kondisi `where`.
 
@@ -75,21 +69,10 @@ Update data berdasarkan kondisi `where`.
 
 ```php
 $pdo->update('users', [
-    'name' => 'Updated Name',
-    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai string
+    'name' => 'Updated Name'
 ], [
     'id' => 1
 ]);
-
-atau 
-
-$pdo->blob()->update('users', [
-    'name' => 'Updated Name',
-    'avatar' => '/path/to/image.jpg' // akan terupdate sebagai file
-], [
-    'id' => 1
-]);
-
 ```
 
 ---
@@ -106,26 +89,47 @@ $pdo->delete('users', ['id' => 5]);
 
 ---
 
-### 📄 `select(string $table, ?string $where = null, ?string $order = null, ?int $limit = null, ?string $columns = '*'): array`
+### 📄 `select(string $table, array $where = [], ?string $order = null, ?int $limit = null, string $columns = '*', bool $useLike = false, array $orWhere = []): array`
 
-Ambil data dari tabel dengan filter opsional.
+Ambil data dari tabel dengan dukungan `LIKE` dan `OR` yang aman.
 
 **Contoh:**
 
 ```php
-$data = $pdo->select('users', 'age > 25', 'id DESC', 10);
+// Select sederhana
+$data = $pdo->select('users', ['role' => 'admin'], 'id DESC', 10);
+
+// Select dengan LIKE dan OR
+$data = $pdo->select('users', ['name' => 'John'], null, null, '*', true, ['email' => 'gmail.com']);
 ```
 
 ---
 
-### 🔢 `count(string $table, ?string $where = null): int`
+### 🔢 `count(string $table, array $where = []): int`
 
-Hitung jumlah record.
+Hitung jumlah record berdasarkan kondisi.
 
 **Contoh:**
 
 ```php
-$total = $pdo->count('users', 'role = "admin"');
+$total = $pdo->count('users', ['role' => 'admin']);
+```
+
+---
+
+### 🏗️ `createTable(string $table, array $columns, string $engine = 'InnoDB', string $charset = 'utf8mb4'): bool`
+
+Membuat tabel baru dengan definisi kolom berbasis array.
+
+**Contoh:**
+
+```php
+$pdo->createTable('users', [
+    'id' => 'INT(11) AUTO_INCREMENT PRIMARY KEY',
+    'name' => 'VARCHAR(255) NOT NULL',
+    'email' => 'VARCHAR(255) NOT NULL',
+    'created_at' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+]);
 ```
 
 ---
@@ -142,11 +146,11 @@ $pdo->format = 'jpg|png|pdf';
 
 ---
 
-## 🧪 Testing File BLOB
+## 🧪 BLOB Helper
 
 ```php
-$isValid = BlobHelper::isBlobFile('image.jpg', $pdo->format); // true
-$content = BlobHelper::readFile('image.jpg'); // isi binary
+$isValid = Database\BlobHelper::isBlobFile('image.jpg', $pdo->format); // true
+$content = Database\BlobHelper::readFile('image.jpg'); // isi binary file
 ```
 
 ---
